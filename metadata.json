@@ -1,0 +1,7 @@
+{
+  "name": "Pocket Poll",
+  "description": "A high-integrity digital consensus voting platform with 100 verified voters, 5 candidates, and time-locked admin analytics.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

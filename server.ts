@@ -24,8 +24,24 @@ async function startServer() {
 
   // Attempt DB Connection & Seeding (safe fallback if no credentials)
   try {
-    await connectDB();
-    await initializeDatabase();
+    const dbResult = await connectDB();
+    if (dbResult.connected) {
+      await initializeDatabase();
+    } else {
+      console.log('⏳ [Pocket Poll] MongoDB Atlas connection will retry in the background...');
+      const retryTimer = setInterval(async () => {
+        try {
+          const res = await connectDB();
+          if (res.connected) {
+            console.log('🎉 [Pocket Poll] MongoDB Atlas connection established!');
+            await initializeDatabase();
+            clearInterval(retryTimer);
+          }
+        } catch {
+          // Keep retrying quietly
+        }
+      }, 15000);
+    }
   } catch (err: any) {
     console.warn('Database initialization note:', err?.message || err);
   }

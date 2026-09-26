@@ -23,7 +23,7 @@ import {
   startTimer,
   stopTimer,
 } from '../pollService.js';
-import { connectDB, getDbStatus } from '../db.js';
+import { connectDB, getDbStatus, getMongoURI } from '../db.js';
 
 export const apiRouter = express.Router();
 
@@ -280,8 +280,7 @@ apiRouter.post('/admin/connect-db', async (req, res) => {
     const { password, customUri } = req.body || {};
     let targetUri = customUri;
     if (!targetUri && password) {
-      const encoded = encodeURIComponent(password);
-      targetUri = `mongodb+srv://shameem278700_db_user:${encoded}@cluster0.hbgacps.mongodb.net/pocket_poll?retryWrites=true&w=majority&appName=Cluster0`;
+      targetUri = getMongoURI(password);
     }
 
     const result = await connectDB(targetUri);
